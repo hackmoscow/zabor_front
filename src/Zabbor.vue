@@ -31,7 +31,7 @@
 						<div id="threads">
 						  <div class="thread" v-for="thread in threads">
 						  	<a href='#' v-on:click.prevent="selectThread(thread)"><h4>{{thread.name}}</h4></a>
-						  	<div>Likes {{thread.likes}}, Dislikes {{thread.dislikes}}</div>
+						  	<div><a href="#" v-on:click.prevent="like(thread)">Like {{thread.likes}}</a>, <a href="#" v-on:click.prevent="dislike(thread)">Dislike {{thread.dislikes}}</a></div>
 						  	<div>Messages {{thread.messages_amount}}</div>
 						  	<div>{{thread.created_at}}</div>
 						  </div>
@@ -39,7 +39,7 @@
 					</div>
 					<div v-if="current_thread">
 						<div id="messages">
-							<div class="message" v-for="messages in current_thread.messages">
+							<div class="message" v-for="message in current_thread.messages">
 							  	<div>{{message.user}}  {{message.created_at}}</div>
 							  	<p>{{message.text}}</p>
 						    </div>
@@ -109,9 +109,31 @@ export default {
 	    
     },
     methods: {
+    	like: function(thread){
+			this.$http.post(`http://${this.host}/thread/${thread.id}/like`, {
+				"pwd": this.pwd
+			})
+			.then(response => {
+				return this.getThreads()
+			})
+			.catch(this.handleError)
+    	},
+    	dislike: function(thread){
+			this.$http.post(`http://${this.host}/thread/${thread.id}/dislike`, {
+				"pwd": this.pwd
+			})
+			.then(response => {
+				return this.getThreads()
+			})
+			.catch(this.handleError)
+    	},
     	sendMessage: function(){
     		if (this.message_text) {
-    			this.$http.post(`http://${this.host}/thread/${this.current_thread.id}`, {"text": this.message_text, "location": this.location, "pwd": this.pwd})
+    			this.$http.post(`http://${this.host}/thread/${this.current_thread.id}`, {
+    				"text": this.message_text,
+    				"location": this.location,
+    				"pwd": this.pwd
+    			})
 				.then(response => {
 					return this.getThreadMessages(this.current_thread)
 				})
@@ -138,7 +160,7 @@ export default {
 		},
 		clearUser: function (error){
 			this.user = null
-			this.pwd = null
+			//this.pwd = null
 			eraseCookie('pwd')
 		},
     	login: function() {
@@ -173,23 +195,17 @@ export default {
     		.catch(this.handleError)
     	},
     	getUser: function() {
-    		//const cookie = JSON.parse(getCookie('pwd'))
-    		// if (cookie && !this.user){
-    		// 	this.pwd = cookie
-    		// 	this.login()
-    		// } else {
-	    	// 	this.$http.get(`http://${this.host}/whoami`)
-	    	// 	.then(function(data){
-	    	// 		return this.setUser(data.body)
-	    	// 	})
-	    	// 	.catch(this.handleError)
-	    	// }
-
-	    	this.$http.get(`http://${this.host}/whoami`)
-    		.then(function(data){
-    			return this.setUser(data.body)
-    		})
-    		.catch(this.handleError)
+    		const cookie = JSON.parse(getCookie('pwd'))
+    		if (cookie && !this.user){
+    			this.pwd = cookie
+    			this.login()
+    		} else {
+	    		this.$http.post(`http://${this.host}/whoami`, {"pwd": this.password})
+	    		.then(function(data){
+	    			return this.setUser(data.body)
+	    		})
+	    		.catch(this.handleError)
+	    	}
     	},
     	handleError: function (error) {
     		console.error(error)
@@ -212,6 +228,7 @@ export default {
 		    this.$http.post(`http://${this.host}/thread`, {
 			    name: this.thread_name,
 			    location: this.location,
+			    pwd: this.pwd
 		    })
 		    .then(function(response){
 			    return this.selectThread(response.body)
