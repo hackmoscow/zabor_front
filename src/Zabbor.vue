@@ -21,8 +21,7 @@
 					<p>user: {{ user }}</p>
 					<textarea v-model="thread_name" placeholder="Расскажите, что здесь происходит"></textarea>
 					<button v-on:click.prevent="postThread">Запостить тред</button>	
-					<button v-on:click.prevent="getThreads">Получить треды</button>	
-					<button v-on:click.prevent="getUser">Getuser</button>	
+					<button v-on:click.prevent="getThreads">Получить треды</button>		
 					<p>Позиция {{location}} </p>
 					<p> {{thread_name}} </p>
 					<p> {{threads}} </p>
