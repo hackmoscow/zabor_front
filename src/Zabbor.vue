@@ -6,7 +6,6 @@
 		<p> {{thread_name}} </p>
 		<p> {{threads}} </p>
 	</div>
-
 </template>
 
 
