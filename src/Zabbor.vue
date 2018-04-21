@@ -22,6 +22,7 @@
 					<textarea v-model="thread_name" placeholder="Расскажите, что здесь происходит"></textarea>
 					<button v-on:click.prevent="postThread">Запостить тред</button>	
 					<button v-on:click.prevent="getThreads">Получить треды</button>	
+					<button v-on:click.prevent="getUser">Getuser</button>	
 					<p>Позиция {{location}} </p>
 					<p> {{thread_name}} </p>
 					<p> {{threads}} </p>
@@ -110,7 +111,7 @@ export default {
     methods: {
     	sendMessage: function(){
     		if (this.message_text) {
-    			this.$http.post(`http://${this.host}/thread/${this.current_thread.id}?location=${this.location}`, {"text": this.message_text})
+    			this.$http.post(`http://${this.host}/thread/${this.current_thread.id}`, {"text": this.message_text, "location": this.location, "pwd": this.pwd})
 				.then(response => {
 					return this.getThreadMessages(this.current_thread)
 				})
@@ -132,7 +133,7 @@ export default {
 		setUser: function (u) {
 			setCookie('pwd', JSON.stringify(this.pwd))
 			this.user = u
-			this.pwd = null
+			//this.pwd = null
 			this.auth_error = null
 		},
 		clearUser: function (error){
@@ -172,17 +173,23 @@ export default {
     		.catch(this.handleError)
     	},
     	getUser: function() {
-    		const cookie = JSON.parse(getCookie('pwd'))
-    		if (cookie && !this.user){
-    			this.pwd = cookie
-    			this.login()
-    		} else {
-	    		this.$http.get(`http://${this.host}/whoami`)
-	    		.then(function(data){
-	    			return this.setUser(data.body)
-	    		})
-	    		.catch(this.handleError)
-	    	}
+    		//const cookie = JSON.parse(getCookie('pwd'))
+    		// if (cookie && !this.user){
+    		// 	this.pwd = cookie
+    		// 	this.login()
+    		// } else {
+	    	// 	this.$http.get(`http://${this.host}/whoami`)
+	    	// 	.then(function(data){
+	    	// 		return this.setUser(data.body)
+	    	// 	})
+	    	// 	.catch(this.handleError)
+	    	// }
+
+	    	this.$http.get(`http://${this.host}/whoami`)
+    		.then(function(data){
+    			return this.setUser(data.body)
+    		})
+    		.catch(this.handleError)
     	},
     	handleError: function (error) {
     		console.error(error)
