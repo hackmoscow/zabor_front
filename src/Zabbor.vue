@@ -18,7 +18,7 @@
       </div>
    </div>
    <div class="container-fluid back" v-if="error">
-      Ну а что ты хотел, это хакатон?
+      Ну а что ты хотел, это хакатон
    </div>
    <div class="container-fluid back" v-else>
       <div v-if="!location">
@@ -279,7 +279,8 @@ export default {
     		.catch(this.handleError)
     	},
     	getUser: function() {
-    		const cookie = JSON.parse(getCookie('pwd'))
+
+    		const cookie = getCookie('pwd') ? JSON.parse(getCookie('pwd')) : null
     		if (cookie && !this.user){
     			this.pwd = cookie
     			this.login()
