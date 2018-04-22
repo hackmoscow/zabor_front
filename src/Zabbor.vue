@@ -11,7 +11,7 @@
             <div id="logo"><img class="img-responsive center-block" src="/static/static/img/logo.png"></div>
          </div>
          <div class="col">
-            <button type="button" class="btn btn-default float-right" aria-label="Left Align">
+            <button type="button" class="btn btn-default float-right back" aria-label="Left Align">
             <img src="/static/static/img/filter.png" width="20" />	
             </button>
          </div>
@@ -22,7 +22,7 @@
    </div>
    <div class="container-fluid back" v-else>
       <div v-if="!location">
-         Please enable location
+         Пожалуйста, предоставьте доступ к геолокации
       </div>
       <div v-else>
          <div class="container zabor-back" v-if="!user" >
@@ -47,7 +47,7 @@
                <div class="col">
                </div>
                <div class="col" style='text-align:center;'>
-                  <button class="btn btn-block" style="font-size: 26px;" v-on:click.prevent="register">Войти</button>
+                  <button class="btn btn-block login" style="font-size: 26px;" v-on:click.prevent="register">Войти</button>
                </div>
                <div class="col">
                </div>
@@ -91,15 +91,15 @@
                            <a href='#' v-on:click.prevent="selectThread(thread)">
                               <h4>{{thread.name}}</h4>
                            </a>
-                           <small>{{thread.created_at}}</small>
+                           <span class="date">{{thread.created_at}}</span>
                         </div>
                      </div>
                      <div class='col' style="text-align:right;">
-                        <div><a href="#" v-on:click.prevent="like(thread)">Like {{thread.likes}}</a></div>
-                        <div><a href="#" v-on:click.prevent="dislike(thread)">Dislike {{thread.dislikes}}</a></div>
+                        <div><a href="#" v-on:click.prevent="like(thread)"><img src="/static/static/img/plus.png" width="20" /> {{thread.likes}}</a></div>
+                        <div><a href="#" v-on:click.prevent="dislike(thread)"><img src="/static/static/img/minus.png" width="20" /> {{thread.dislikes}}</a></div>
                      </div>
                   </div>
-                  <div>{{thread.messages_amount}} messages</div>
+                  <div>{{thread.messages_amount}} сообщнений</div>
                </div>
             </div>
          </div>
@@ -108,17 +108,17 @@
                <div class='row' style='height:7px;width:100%;'></div>
                <div class='row' style='width:100%;'>
                   <div class='col-2' style='padding:0px;padding-left:30px;'>
-                  	<button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">back</button>
+                  	<button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">Назад</button>
                   </div>
-                  <div class='col' style='text-align:center'>{{current_thread.name}}</div>
+                  <div class='col' style='text-align:center thread_title'>{{current_thread.name}}</div>
                </div>
             </div>
             <div id="messages">
                <div class="message" v-for="message in current_thread.messages">
                   <div class="message_title row" style="width:100%;margin:0;padding:15px;">
                      <div style='width:100%;'>
-                        <div>{{message.user}}</div>
-                        <small>{{message.created_at}}</small>
+                        <div class="name">{{message.user}}</div>
+                        <span class="date">{{message.created_at}}</span>
                      </div>
                      <div>
                         {{message.text}}
@@ -127,6 +127,11 @@
                </div>
             </div>
          </div>
+         
+         <div v-if="map">
+	         
+         </div>
+         
       </div>
    </div>
 </div>
@@ -349,9 +354,10 @@ export default {
 	
 	.message {
 		font-size: 16px;
+		margin-top: 10px;
 	}
 	.thread {
-		padding-top: 10px;
+		margin-top: 10px;
 		border-top-color: #a5a5a5;
 		font-size: 16px;
 	}
@@ -361,7 +367,18 @@ export default {
 	.message_title {
 		font-size: 18px;
 	}
-	
+	.login {
+		background: transparent;
+	  	border-radius: 20px !important;
+	  	border-color: white !important;
+		}
+	.date {
+		font-size: 12px;
+		opacity: 0.7;
+		}
+		
+		
+		
 	
 	
 </style>
