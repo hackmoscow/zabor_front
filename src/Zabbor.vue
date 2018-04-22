@@ -1,9 +1,10 @@
 <template>
 <div id="app">
+	<div id="map" style="width:100%; height: 800px;position:fixed;top:59px;" v-bind:class="{hidden: !showMap}"></div>
    <div class="container-fluid back">
       <div class="navbar">
          <div class="col">
-            <button type="button" class="btn btn-default back" aria-label="Left Align">
+            <button  v-on:click.prevent="toggleMap" type="button" class="btn btn-default back" aria-label="Left Align">
             <img src="/static/static/img/change.png" width="20" />
             </button>
          </div>
@@ -11,20 +12,18 @@
             <div id="logo"><img class="img-responsive center-block" src="/static/static/img/logo.png"></div>
          </div>
          <div class="col">
-            <button type="button" class="btn btn-default float-right back" aria-label="Left Align">
-            <img src="/static/static/img/filter.png" width="20" />	
-            </button>
          </div>
       </div>
    </div>
    <div class="container-fluid back" v-if="error">
-      Ну а что ты хотел, это хакатон
+       Ошибка. Ну а что ты хотел, это хакатон
    </div>
    <div class="container-fluid back" v-else>
       <div v-if="!location">
          Пожалуйста, предоставьте доступ к геолокации
       </div>
       <div v-else>
+      	<div v-if="!showMap">
          <div class="container zabor-back" v-if="!user" >
             <div style='width:100%;height:300px;'></div>
             <div class='row'>
@@ -62,8 +61,8 @@
                      <div class="col">
                      </div>
                      <div class="col-8" style="text-align:center">
-                        <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
-                        <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="postThread">Отправить</button>	
+                        <input type="text" style="width:50%;float:left;margin-top:20px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
+                        <button  class="btn btn-lg" style="width:40%;float:right;margin-top:15px;" v-on:click.prevent="postThread">Отправить</button>	
                      </div>
                      <div class="col">
                      </div>
@@ -74,8 +73,8 @@
                   <div class="col">
                   </div>
                   <div class="col-8" style="text-align:center">
-                     <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
-                     <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="sendMessage">Отправить</button>	
+                     <input type="text" style="width:50%;float:left;margin-top:20px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
+                     <button  class="btn btn-lg" style="width:40%;float:right;margin-top:15px;" v-on:click.prevent="sendMessage">Отправить</button>	
                   </div>
                   <div class="col">
                   </div>
@@ -108,9 +107,9 @@
                <div class='row' style='height:7px;width:100%;'></div>
                <div class='row' style='width:100%;'>
                   <div class='col-2' style='padding:0px;padding-left:30px;'>
-                  	<button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">Назад</button>
+                  	<button href="#" class="btn-sm back" v-on:click.prevent="clearCurrentThread()">&lt;&nbsp;Назад</button>
                   </div>
-                  <div class='col' style='text-align:center thread_title'>{{current_thread.name}}</div>
+                  <div class='col thread_messages' style='text-align:center'>{{current_thread.name}}</div>
                </div>
             </div>
             <div id="messages">
@@ -127,9 +126,6 @@
                </div>
             </div>
          </div>
-         
-         <div v-if="map">
-	         
          </div>
          
       </div>
@@ -144,6 +140,23 @@
 
 <script>
 'use strict';
+
+function addCircleToMap(map){
+  map.addObject(new H.map.Circle(
+    // The central point of the circle
+    {lat:55.7819515, lng:37.5992906},
+    // The radius of the circle in meters
+    50,
+    {
+      style: {
+        strokeColor: 'rgba(55, 85, 170, 0.6)', // Color of the perimeter
+        lineWidth: 2,
+        fillColor: 'rgba(0, 128, 0, 0.7)'  // Color of the circle
+      }
+    }
+  ));
+}
+
 
 function setCookie(name,value,days) {
     var expires = "";
@@ -181,6 +194,11 @@ export default {
 			threads: [],
 			current_thread: null,
 
+			showMap: false, 
+
+			map: null,
+			real_location: null,
+
 			user: null,
 			pwd: null,
 			auth_error: null,
@@ -195,6 +213,42 @@ export default {
 	    
     },
     methods: {
+    	initializeMap: function() {
+			/**
+			 * Boilerplate map initialization code starts below:
+			 */
+			if (!document.getElementById('map') || this.map) {
+				return
+			}
+			const lat = this.real_location.coords.latitude
+			const lon = this.real_location.coords.longitude
+			
+			//Step 1: initialize communication with the platform
+			const platform = new H.service.Platform({
+			  app_id: 'eBByL2aGfruC4VB2wk21',
+			  app_code: 'C3NOOCY1l-zIeYRasrqPSA'
+			});
+			const defaultLayers = platform.createDefaultLayers();
+			//Step 2: initialize a map - this map is centered over New Delhi
+			this.map = new H.Map(document.getElementById('map'),
+			  defaultLayers.normal.map,{
+			  center: {"lat":lat, "lng":lon},
+			  zoom: 16
+			});
+			//Step 3: make the map interactive
+			// MapEvents enables the event system
+			// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+			const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+			// Create the default UI components
+			const ui = H.ui.UI.createDefault(this.map, defaultLayers);
+			
+			// Now use the map as required...
+			addCircleToMap(this.map);
+    	},
+    	toggleMap: function(){
+    		this.showMap = !this.showMap
+    	},
+
     	like: function(thread){
 			this.$http.post(`${this.scheme}://${this.host}/thread/${thread.id}/like`, {
 				"pwd": this.pwd
@@ -307,9 +361,13 @@ export default {
     	},
 		updateLocation: function (location) {
 			console.log(location)
+			this.real_location = location
 		    this.location = String(location.coords.latitude) + "," + String(location.coords.longitude)
 		    if (this.threads.length == 0) {
 		    	this.getThreads()
+		    }
+		     if (!this.map) {
+		    	this.initializeMap()
 		    }
 	    },  
 		postThread: function () {
@@ -344,10 +402,6 @@ export default {
 }
 </script>
 <style>
-	@font-face {
-    font-family: Jura; /* Имя шрифта */
-    src: url(https://fonts.googleapis.com/css?family=Jura:400,600&amp;subset=cyrillic-ext); /* Путь к файлу со шрифтом */
-   }
    #app {
 		font-family: Jura, sans-serif;
 	}
@@ -377,7 +431,19 @@ export default {
 		opacity: 0.7;
 		}
 		
+	.thread_messages {
+		display: block;
+		margin-bottom: 10px;
+		}
+	.back {
+		border: none !important;
+		background: transparent;
+		}
 		
+	.hidden {
+		z-index: -1!important;
+		top: -1800px!important;
+	}
 		
 	
 	
