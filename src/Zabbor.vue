@@ -1,6 +1,7 @@
 <template>
 <div id="app">
-   <div class="container-fluid back">
+   	<div id="map" style="width:100%; height: 800px;position:fixed;top:59px;" v-bind:class="{hidden: !showMap}"></div>
+   <div class="container-fluid back" style='z-index:2'>
       <div class="navbar">
          <div class="col">
             <button v-on:click.prevent="toggleMap" type="button" class="btn btn-default back" aria-label="Left Align">
@@ -25,9 +26,6 @@
          Пожалуйста, предоставьте доступ к геолокации
       </div>
       <div v-show="location">
-         <div id="map_screen" v-show="showMap">
-            <div id="map" style="width: 600px; height: 400px;"></div>
-         </div>
          <div v-if="!showMap">
             <div class="container zabor-back" v-if="!user" >
                <div style='width:100%;height:300px;'></div>
@@ -226,7 +224,7 @@ export default {
 			/**
 			 * Boilerplate map initialization code starts below:
 			 */
-			if (!document.getElementById('map') || this.num_maps > 1) {
+			if (!document.getElementById('map') || this.map) {
 				return
 			}
 			const lat = this.real_location.coords.latitude
@@ -235,9 +233,7 @@ export default {
 			//Step 1: initialize communication with the platform
 			const platform = new H.service.Platform({
 			  app_id: 'eBByL2aGfruC4VB2wk21',
-			  app_code: 'C3NOOCY1l-zIeYRasrqPSA',
-			  useCIT: true,
-			  useHTTPS: true
+			  app_code: 'C3NOOCY1l-zIeYRasrqPSA'
 			});
 
 			const defaultLayers = platform.createDefaultLayers();
@@ -377,7 +373,11 @@ export default {
 		    if (this.threads.length == 0) {
 		    	this.getThreads()
 		    }
-	    	this.initializeMap()
+		    if (!this.map) {
+
+		    	this.initializeMap()
+		    }
+	    	
 	    },  
 		postThread: function () {
 			if (!this.location) {
@@ -443,8 +443,12 @@ export default {
 		font-size: 12px;
 		opacity: 0.7;
 		}
-		
-		
+
+	.hidden {
+		z-index: -1!important;
+		top: -1800px!important;
+	}
+
 		
 	
 	
