@@ -175,8 +175,8 @@ export default {
     },
     data: function() {
         return {
-            scheme: 'http',
-	    	host: 'localhost:8000',
+            scheme: 'https',
+	    	host: 'zabbor.net',
 			location: null,
 			threads: [],
 			current_thread: null,
