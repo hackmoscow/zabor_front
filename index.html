@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Zabbor</title>
+    <title>Zabor</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
@@ -24,6 +24,7 @@
 
   	
 	<style>
+		
 		@import url('https://fonts.googleapis.com/css?family=Jura:400,600&subset=cyrillic-ext');	
 	
 	  h1, h2, h3, h4, a, p, div, input, button, span {
@@ -74,6 +75,12 @@
 			border-top: 1px solid #838181;
 			border-radius: 3px;
 		}
+		@media (max-width: 720px) {
+			.thread {
+				padding-left: 5%;
+				padding-right: 5%;
+			}
+		}
 		.thread:nth-child(odd) {
 			background: #565656;
 		} 
@@ -95,7 +102,6 @@
 			border-top: 1px solid #565656;
 			border-radius: 3px;
 		}
-
 		.zabor-back {
 			    background-image: url(/static/static/img/background.png);
 			    background-repeat: no-repeat;
@@ -107,7 +113,7 @@
 			    bottom: 0;
 			    margin: auto;
 		}
-</style>  
+		</style>  
 
   </body>
   

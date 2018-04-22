@@ -11,9 +11,6 @@
             <div id="logo"><img class="img-responsive center-block" src="/static/static/img/logo.png"></div>
          </div>
          <div class="col">
-            <button type="button" class="btn btn-default float-right back" aria-label="Left Align">
-            <img src="/static/static/img/filter.png" width="20" />	
-            </button>
          </div>
       </div>
    </div>
@@ -62,8 +59,8 @@
                      <div class="col">
                      </div>
                      <div class="col-8" style="text-align:center">
-                        <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
-                        <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="postThread">Отправить</button>	
+                        <input type="text" style="width:50%;float:left;margin-top:20px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
+                        <button  class="btn btn-lg" style="width:40%;float:right;margin-top:15px;" v-on:click.prevent="postThread">Отправить</button>	
                      </div>
                      <div class="col">
                      </div>
@@ -74,8 +71,8 @@
                   <div class="col">
                   </div>
                   <div class="col-8" style="text-align:center">
-                     <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
-                     <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="sendMessage">Отправить</button>	
+                     <input type="text" style="width:50%;float:left;margin-top:20px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
+                     <button  class="btn btn-lg" style="width:40%;float:right;margin-top:15px;" v-on:click.prevent="sendMessage">Отправить</button>	
                   </div>
                   <div class="col">
                   </div>
@@ -108,9 +105,9 @@
                <div class='row' style='height:7px;width:100%;'></div>
                <div class='row' style='width:100%;'>
                   <div class='col-2' style='padding:0px;padding-left:30px;'>
-                  	<button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">Назад</button>
+                  	<button href="#" class="btn-sm back" v-on:click.prevent="clearCurrentThread()">&lt;&nbsp;Назад</button>
                   </div>
-                  <div class='col' style='text-align:center thread_title'>{{current_thread.name}}</div>
+                  <div class='col thread_messages' style='text-align:center'>{{current_thread.name}}</div>
                </div>
             </div>
             <div id="messages">
@@ -343,10 +340,6 @@ export default {
 }
 </script>
 <style>
-	@font-face {
-    font-family: Jura; /* Имя шрифта */
-    src: url(https://fonts.googleapis.com/css?family=Jura:400,600&amp;subset=cyrillic-ext); /* Путь к файлу со шрифтом */
-   }
    #app {
 		font-family: Jura, sans-serif;
 	}
@@ -376,6 +369,14 @@ export default {
 		opacity: 0.7;
 		}
 		
+	.thread_messages {
+		display: block;
+		margin-bottom: 10px;
+		}
+	.back {
+		border: none !important;
+		background: transparent;
+		}
 		
 		
 	
