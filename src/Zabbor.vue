@@ -233,6 +233,7 @@ export default {
 			this.map = new H.Map(document.getElementById('map'),
 			  defaultLayers.normal.map,{
 			  center: {"lat":lat, "lng":lon},
+			  useHTTPS: true,
 			  zoom: 16
 			});
 			//Step 3: make the map interactive
