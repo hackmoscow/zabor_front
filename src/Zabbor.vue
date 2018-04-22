@@ -170,7 +170,8 @@ export default {
     },
     data: function() {
         return {
-	    	host: 'localhost:8000',
+            scheme: 'https',
+	    	host: 'zabbor.net',
 			location: null,
 			threads: [],
 			current_thread: null,
@@ -190,7 +191,7 @@ export default {
     },
     methods: {
     	like: function(thread){
-			this.$http.post(`http://${this.host}/thread/${thread.id}/like`, {
+			this.$http.post(`${this.scheme}://${this.host}/thread/${thread.id}/like`, {
 				"pwd": this.pwd
 			})
 			.then(response => {
@@ -199,7 +200,7 @@ export default {
 			.catch(this.handleError)
     	},
     	dislike: function(thread){
-			this.$http.post(`http://${this.host}/thread/${thread.id}/dislike`, {
+			this.$http.post(`${this.scheme}://${this.host}/thread/${thread.id}/dislike`, {
 				"pwd": this.pwd
 			})
 			.then(response => {
@@ -209,7 +210,7 @@ export default {
     	},
     	sendMessage: function(){
     		if (this.message_text) {
-    			this.$http.post(`http://${this.host}/thread/${this.current_thread.id}`, {
+    			this.$http.post(`${this.scheme}://${this.host}/thread/${this.current_thread.id}`, {
     				"text": this.message_text,
     				"location": this.location,
     				"pwd": this.pwd
@@ -225,7 +226,7 @@ export default {
     		return this.getThreads();
     	},
     	getThreadMessages: function(thread){
-    		this.$http.get(`http://${this.host}/thread/${thread.id}?location=${this.location}`)
+    		this.$http.get(`${this.scheme}://${this.host}/thread/${thread.id}?location=${this.location}`)
 			.then(response => {
 				this.current_thread = response.body;
 			})
@@ -254,7 +255,7 @@ export default {
     		}
     		console.log('logging in', this.pwd)
     		const password = this.pwd
-    		this.$http.post(`http://${this.host}/auth`, {password: password})
+    		this.$http.post(`${this.scheme}://${this.host}/auth`, {password: password})
     		.then(function(data){
     			return this.setUser(data.body)
     		})
@@ -267,7 +268,7 @@ export default {
     		}
     		console.log('registering', this.pwd)
     		const password = this.pwd
-    		this.$http.post(`http://${this.host}/register`, {password: password})
+    		this.$http.post(`${this.scheme}://${this.host}/register`, {password: password})
     		.then(function(data){
     			return this.setUser(data.body)
     		},
@@ -285,7 +286,7 @@ export default {
     			this.pwd = cookie
     			this.login()
     		} else {
-	    		this.$http.post(`http://${this.host}/whoami`, {"pwd": this.password})
+	    		this.$http.post(`${this.scheme}://${this.host}/whoami`, {"pwd": this.password})
 	    		.then(function(data){
 	    			return this.setUser(data.body)
 	    		})
@@ -310,7 +311,7 @@ export default {
 			if (!this.location) {
 				return
 			}
-		    this.$http.post(`http://${this.host}/thread`, {
+		    this.$http.post(`${this.scheme}://${this.host}/thread`, {
 			    name: this.thread_name,
 			    location: this.location,
 			    pwd: this.pwd
@@ -324,7 +325,7 @@ export default {
 			if (!this.location) {
 				return
 			}
-			this.$http.get(`http://${this.host}/thread?location=${this.location}`)
+			this.$http.get(`${this.scheme}://${this.host}/thread?location=${this.location}`)
 			.then(response => {
 				this.threads = response.body;
 			})
