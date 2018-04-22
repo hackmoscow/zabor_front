@@ -3,7 +3,7 @@
    <div class="container-fluid back">
       <div class="navbar">
          <div class="col">
-            <button type="button" class="btn btn-default back" aria-label="Left Align">
+            <button v-on:click.prevent="toggleMap" type="button" class="btn btn-default back" aria-label="Left Align">
             <img src="/static/static/img/change.png" width="20" />
             </button>
          </div>
@@ -18,123 +18,123 @@
       </div>
    </div>
    <div class="container-fluid back" v-if="error">
-      Ну а что ты хотел, это хакатон
+      Ошибка. Ну а что ты хотел, это хакатон
    </div>
    <div class="container-fluid back" v-else>
-      <div v-if="!location">
+      <div v-show="!location">
          Пожалуйста, предоставьте доступ к геолокации
       </div>
-      <div v-else>
-         <div class="container zabor-back" v-if="!user" >
-            <div style='width:100%;height:300px;'></div>
-            <div class='row'>
-               <div class="col">
-               </div>
-               <div class="col" style='text-align:center;'>
-                  <input style="margin:auto;" type="text" class="input-group-text" v-model="pwd" placeholder="Password"></input>
-               </div>
-               <div class="col">
-               </div>
-            </div>
-            <div style='width:100%;height:50px;'>
-            </div>
-            <div class="row" v-if="auth_error">
-               <span style="margin:auto;text-align:center;color:red">{{auth_error}}</span>
-            </div>
-            <div style='width:100%;height:50px;'>
-            </div>
-            <div class='row' style="margin-bottom:50px;">
-               <div class="col">
-               </div>
-               <div class="col" style='text-align:center;'>
-                  <button class="btn btn-block login" style="font-size: 26px;" v-on:click.prevent="register">Войти</button>
-               </div>
-               <div class="col">
-               </div>
-            </div>
-            <div style='width:100%;height:50px;'>
-            </div>
+      <div v-show="location">
+         <div id="map_screen" v-show="showMap">
+            <div id="map" style="width: 600px; height: 400px;"></div>
          </div>
-         <div v-if="user">
-            <div class="podbar back">
+         <div v-if="!showMap">
+            <div class="container zabor-back" v-if="!user" >
+               <div style='width:100%;height:300px;'></div>
+               <div class='row'>
+                  <div class="col">
+                  </div>
+                  <div class="col" style='text-align:center;'>
+                     <input style="margin:auto;" type="text" class="input-group-text" v-model="pwd" placeholder="Password"></input>
+                  </div>
+                  <div class="col">
+                  </div>
+               </div>
+               <div style='width:100%;height:50px;'>
+               </div>
+               <div class="row" v-if="auth_error">
+                  <span style="margin:auto;text-align:center;color:red">{{auth_error}}</span>
+               </div>
+               <div style='width:100%;height:50px;'>
+               </div>
+               <div class='row' style="margin-bottom:50px;">
+                  <div class="col">
+                  </div>
+                  <div class="col" style='text-align:center;'>
+                     <button class="btn btn-block login" style="font-size: 26px;" v-on:click.prevent="register">Войти</button>
+                  </div>
+                  <div class="col">
+                  </div>
+               </div>
+               <div style='width:100%;height:50px;'>
+               </div>
+            </div>
+            <div v-if="user">
+               <div class="podbar back">
+                  <div v-if="!current_thread">
+                     <div class="row">
+                        <div class="col">
+                        </div>
+                        <div class="col-8" style="text-align:center">
+                           <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
+                           <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="postThread">Отправить</button>	
+                        </div>
+                        <div class="col">
+                        </div>
+                     </div>
+                  </div>
+                  <div v-if="current_thread">
+                     <div class="row">
+                        <div class="col">
+                        </div>
+                        <div class="col-8" style="text-align:center">
+                           <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
+                           <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="sendMessage">Отправить</button>	
+                        </div>
+                        <div class="col">
+                        </div>
+                     </div>
+                  </div>
+               </div>
                <div v-if="!current_thread">
-                  <div class="row">
-                     <div class="col">
-                     </div>
-                     <div class="col-8" style="text-align:center">
-                        <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
-                        <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="postThread">Отправить</button>	
-                     </div>
-                     <div class="col">
+                  <div id="threads" class="container" >
+                     <div class="thread row" v-for="thread in threads">
+                        <div class="thread_title row" style="width:100%;">
+                           <div class='col-8'>
+                              <div>
+                                 <a href='#' v-on:click.prevent="selectThread(thread)">
+                                    <h4>{{thread.name}}</h4>
+                                 </a>
+                                 <span class="date">{{thread.created_at}}</span>
+                              </div>
+                           </div>
+                           <div class='col' style="text-align:right;">
+                              <div><a href="#" v-on:click.prevent="like(thread)"><img src="/static/static/img/plus.png" width="20" /> {{thread.likes}}</a></div>
+                              <div><a href="#" v-on:click.prevent="dislike(thread)"><img src="/static/static/img/minus.png" width="20" /> {{thread.dislikes}}</a></div>
+                           </div>
+                        </div>
+                        <div>{{thread.messages_amount}} сообщнений</div>
                      </div>
                   </div>
                </div>
                <div v-if="current_thread">
-               	<div class="row">
-                  <div class="col">
+                  <div class="row" style="height:50px;background:rgba(255,255,255,0.2);">
+                     <div class='row' style='height:7px;width:100%;'></div>
+                     <div class='row' style='width:100%;'>
+                        <div class='col-2' style='padding:0px;padding-left:30px;'>
+                           <button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">Назад</button>
+                        </div>
+                        <div class='col' style='text-align:center thread_title'>{{current_thread.name}}</div>
+                     </div>
                   </div>
-                  <div class="col-8" style="text-align:center">
-                     <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
-                     <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="sendMessage">Отправить</button>	
-                  </div>
-                  <div class="col">
-                  </div>
-              	</div>
-               </div>
-            </div>
-         <div v-if="!current_thread">
-            <div id="threads" class="container" >
-               <div class="thread row" v-for="thread in threads">
-                  <div class="thread_title row" style="width:100%;">
-                     <div class='col-8'>
-                        <div>
-                           <a href='#' v-on:click.prevent="selectThread(thread)">
-                              <h4>{{thread.name}}</h4>
-                           </a>
-                           <span class="date">{{thread.created_at}}</span>
+                  <div id="messages">
+                     <div class="message" v-for="message in current_thread.messages">
+                        <div class="message_title row" style="width:100%;margin:0;padding:15px;">
+                           <div style='width:100%;'>
+                              <div class="name">{{message.user}}</div>
+                              <span class="date">{{message.created_at}}</span>
+                           </div>
+                           <div>
+                              {{message.text}}
+                           </div>
                         </div>
                      </div>
-                     <div class='col' style="text-align:right;">
-                        <div><a href="#" v-on:click.prevent="like(thread)"><img src="/static/static/img/plus.png" width="20" /> {{thread.likes}}</a></div>
-                        <div><a href="#" v-on:click.prevent="dislike(thread)"><img src="/static/static/img/minus.png" width="20" /> {{thread.dislikes}}</a></div>
-                     </div>
-                  </div>
-                  <div>{{thread.messages_amount}} сообщнений</div>
-               </div>
-            </div>
-         </div>
-         <div v-if="current_thread">
-            <div class="row" style="height:50px;background:rgba(255,255,255,0.2);">
-               <div class='row' style='height:7px;width:100%;'></div>
-               <div class='row' style='width:100%;'>
-                  <div class='col-2' style='padding:0px;padding-left:30px;'>
-                  	<button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">Назад</button>
-                  </div>
-                  <div class='col' style='text-align:center thread_title'>{{current_thread.name}}</div>
-               </div>
-            </div>
-            <div id="messages">
-               <div class="message" v-for="message in current_thread.messages">
-                  <div class="message_title row" style="width:100%;margin:0;padding:15px;">
-                     <div style='width:100%;'>
-                        <div class="name">{{message.user}}</div>
-                        <span class="date">{{message.created_at}}</span>
-                     </div>
-                     <div>
-                        {{message.text}}
-                     </div>
                   </div>
                </div>
             </div>
          </div>
-         
-         <div v-if="map">
-	         
-         </div>
-         
-      </div>
+      </div> <!-- this -->
    </div>
-</div>
 </div>
 
     
@@ -144,6 +144,22 @@
 
 <script>
 'use strict';
+
+function addCircleToMap(map){
+  map.addObject(new H.map.Circle(
+    // The central point of the circle
+    {lat:55.7819515, lng:37.5992906},
+    // The radius of the circle in meters
+    50,
+    {
+      style: {
+        strokeColor: 'rgba(55, 85, 170, 0.6)', // Color of the perimeter
+        lineWidth: 2,
+        fillColor: 'rgba(0, 128, 0, 0.7)'  // Color of the circle
+      }
+    }
+  ));
+}
 
 function setCookie(name,value,days) {
     var expires = "";
@@ -168,6 +184,10 @@ function eraseCookie(name) {
     document.cookie = name+'=; Max-Age=-99999999;';  
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 export default {
 	name: 'app',
     components: {
@@ -181,6 +201,8 @@ export default {
 			threads: [],
 			current_thread: null,
 
+            showMap: false, 
+
 			user: null,
 			pwd: null,
 			auth_error: null,
@@ -189,12 +211,55 @@ export default {
 
 			message_text: null,
 
+			map: null,
+
+			real_location: null,
+
+			num_maps: 0
 		  }
     },
 	computed: {
 	    
     },
     methods: {
+    	initializeMap: function() {
+			/**
+			 * Boilerplate map initialization code starts below:
+			 */
+			if (!document.getElementById('map') || this.num_maps > 1) {
+				return
+			}
+			const lat = this.real_location.coords.latitude
+			const lon = this.real_location.coords.longitude
+			
+			//Step 1: initialize communication with the platform
+			const platform = new H.service.Platform({
+			  app_id: 'eBByL2aGfruC4VB2wk21',
+			  app_code: 'C3NOOCY1l-zIeYRasrqPSA',
+			  useCIT: true,
+			  useHTTPS: true
+			});
+
+			const defaultLayers = platform.createDefaultLayers();
+			//Step 2: initialize a map - this map is centered over New Delhi
+			this.map = new H.Map(document.getElementById('map'),
+			  defaultLayers.normal.map,{
+			  center: {"lat":lat, "lng":lon},
+			  zoom: 16
+			});
+			//Step 3: make the map interactive
+			// MapEvents enables the event system
+			// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
+			const behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(this.map));
+			// Create the default UI components
+			const ui = H.ui.UI.createDefault(this.map, defaultLayers);
+			
+			// Now use the map as required...
+			addCircleToMap(this.map);
+    	},
+    	toggleMap: function(){
+    		this.showMap = !this.showMap
+    	},
     	like: function(thread){
 			this.$http.post(`${this.scheme}://${this.host}/thread/${thread.id}/like`, {
 				"pwd": this.pwd
@@ -307,10 +372,12 @@ export default {
     	},
 		updateLocation: function (location) {
 			console.log(location)
+			this.real_location = location
 		    this.location = String(location.coords.latitude) + "," + String(location.coords.longitude)
 		    if (this.threads.length == 0) {
 		    	this.getThreads()
 		    }
+	    	this.initializeMap()
 	    },  
 		postThread: function () {
 			if (!this.location) {
