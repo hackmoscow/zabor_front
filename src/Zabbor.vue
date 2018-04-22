@@ -47,7 +47,7 @@
                <div class="col">
                </div>
                <div class="col" style='text-align:center;'>
-                  <button class="btn btn-block" style="font-size: 26px;" v-on:click.prevent="register">Connect</button>
+                  <button class="btn btn-block" style="font-size: 26px;" v-on:click.prevent="register">Войти</button>
                </div>
                <div class="col">
                </div>
@@ -338,10 +338,29 @@ export default {
 }
 </script>
 <style>
-    p {
-	    color: green;
-	    padding: 10px;
-	    border: 1px solid rgba(0, 0, 0, 0.91);
-	    border-radius: 5px;
-    }
+	@font-face {
+    font-family: Jura; /* Имя шрифта */
+    src: url(https://fonts.googleapis.com/css?family=Jura:400,600&amp;subset=cyrillic-ext); /* Путь к файлу со шрифтом */
+   }
+   #app {
+		font-family: Jura, sans-serif;
+	}
+	
+	.message {
+		font-size: 16px;
+	}
+	.thread {
+		padding-top: 10px;
+		border-top-color: #a5a5a5;
+		font-size: 16px;
+	}
+	.thread_title {
+		font-size: 20px;
+	}
+	.message_title {
+		font-size: 18px;
+	}
+	
+	
+	
 </style>

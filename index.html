@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Zabor</title>
+    <title>Zabbor</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
@@ -24,15 +24,14 @@
 
   	
 	<style>
-
+		@import url('https://fonts.googleapis.com/css?family=Jura:400,600&subset=cyrillic-ext');	
+	
 	  h1, h2, h3, h4, a, p, div, input, button, span {
 		  	color:white;
-		  	font-family: Font Jura-Regular
+		  	font-family: Jura;
 		  }
 	  button {
 	  	background: transparent;
-	  	border-radius: 20px !important;
-	  	border-color: white !important;
 	  }
 	  a:hover {
 	  	color:white;
@@ -71,15 +70,30 @@
 			padding:15px;
 			padding-left: 20%;
 			padding-right: 20%;
+			margin-top: 10px;
+			border-top: 1px solid #838181;
+			border-radius: 3px;
 		}
 		.thread:nth-child(odd) {
-			background: #696868;
+			background: #565656;
+		} 
+		.thread:nth-child(even) {
+			background: #888888;
 		} 
 		#messages {
 			margin-bottom: 100px;
 		}
 		.message:nth-child(odd) {
-			background: #696868;
+			background: #565656;
+			margin-top: 10px;
+			border-top: 1px solid #888888;
+			border-radius: 3px;
+		}
+		.message:nth-child(even) {
+			background: #888888;
+			margin-top: 10px;
+			border-top: 1px solid #565656;
+			border-radius: 3px;
 		}
 
 		.zabor-back {
