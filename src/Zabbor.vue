@@ -1,10 +1,10 @@
 <template>
 <div id="app">
-	<div id="map" style="width:100%; height: 800px;position:fixed;top:59px;" v-bind:class="{hidden: !showMap}"></div>
+    <!--	<div id="map" style="width:100%; height: 800px;position:fixed;top:59px;" v-bind:class="{hidden: !showMap}"></div> -->
    <div class="container-fluid back">
       <div class="navbar">
          <div class="col">
-            <button  v-on:click.prevent="toggleMap" type="button" class="btn btn-default back" aria-label="Left Align">
+            <button  type="button" class="btn btn-default back" aria-label="Left Align">
             <img src="/static/static/img/change.png" width="20" />
             </button>
          </div>
@@ -367,9 +367,9 @@ export default {
 		    if (this.threads.length == 0) {
 		    	this.getThreads()
 		    }
-		     if (!this.map) {
-		    	this.initializeMap()
-		    }
+		    // if (!this.map) {
+		    //	this.initializeMap()
+		    //}
 	    },  
 		postThread: function () {
 			if (!this.location) {
