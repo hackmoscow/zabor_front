@@ -12,109 +12,90 @@
     <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-ui.js"></script>
     <script type="text/javascript" src="https://js.api.here.com/v3/3.0/mapsjs-mapevents.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+
   </head>
   <body>
 	<div id="app"></div>
     <!-- built files will be auto injected -->
     <script src="/static/dist/build.js" charset='utf-8'></script>
     <link rel="stylesheet" href="/static/dist/build.css">
-    
-    <div class="container-fluid back">
-	    <div class="navbar">
-		    <div class="col">
-			    <button type="button" class="btn btn-default back" aria-label="Left Align">
-					<img src="/static/static/img/change.png" width="20" />
-				</button>
-		    </div>
-		    <div class="col">
-				<div id="logo"><img class="img-responsive center-block" src="/static/static/img/logo.png"></div>
-		    </div>
-		    <div class="col">
-				<button type="button" class="btn btn-default float-right" aria-label="Left Align">
-					<img src="/static/static/img/filter.png" width="20" />
 
-				</button>
-		    </div>
-	    </div>
-    </div>
+  	
+	<style>
 
-    <div id="map" style="width: 1200px; height: 400px; background: #2f2f2f; margin-left: 50%; position: relative; left: -600px;"></div>
-    
-    
-    <div class="container-fluid">
-	    
-    </div>
-    
-    
-    <script type="text/javascript" src='static/js/app.js'></script>
-        <script type="text/javascript">
-		 /**
-		 * Adds a circle over New Delhi with a radius of 1000 metres onto the map
-		 *
-		 * @param  {H.Map} map      A HERE Map instance within the application
-		 */
-		function addCircleToMap(map){
-		  map.addObject(new H.map.Circle(
-		    // The central point of the circle
-		    {lat:55.7819515, lng:37.5992906},
-		    // The radius of the circle in meters
-		    50,
-		    {
-		      style: {
-		        strokeColor: 'rgba(55, 85, 170, 0.6)', // Color of the perimeter
-		        lineWidth: 2,
-		        fillColor: 'rgba(0, 128, 0, 0.7)'  // Color of the circle
-		      }
-		    }
-		  ));
-		}
-		
-		
-		/**
-		 * Boilerplate map initialization code starts below:
-		 */
-		
-		//Step 1: initialize communication with the platform
-		var platform = new H.service.Platform({
-		  app_id: 'eBByL2aGfruC4VB2wk21',
-		  app_code: 'C3NOOCY1l-zIeYRasrqPSA',
-		  useCIT: true,
-		  useHTTPS: true
-		});
-		var defaultLayers = platform.createDefaultLayers();
-		
-		//Step 2: initialize a map - this map is centered over New Delhi
-		var map = new H.Map(document.getElementById('map'),
-		  defaultLayers.normal.map,{
-		  center: {lat:55.7819515, lng:37.5992906},
-		  zoom: 16
-		});
-		
-		//Step 3: make the map interactive
-		// MapEvents enables the event system
-		// Behavior implements default interactions for pan/zoom (also on mobile touch environments)
-		var behavior = new H.mapevents.Behavior(new H.mapevents.MapEvents(map));
-		
-		// Create the default UI components
-		var ui = H.ui.UI.createDefault(map, defaultLayers);
-		
-		// Now use the map as required...
-		addCircleToMap(map);
-	</script>
-    
-  </body>
-  
-  	<style>
+	  h1, h2, h3, h4, a, p, div, input, button, span {
+		  	color:white;
+		  	font-family: Font Jura-Regular
+		  }
+	  button {
+	  	background: transparent;
+	  	border-radius: 20px !important;
+	  	border-color: white !important;
+	  }
+	  a:hover {
+	  	color:white;
+	  }
 	  #logo {
 		  margin-left: 50%;
 		  position: relative;
 		  left: -75px;
 	  }
+	  body {
+	    background-color: #2f2f2f;
+	  }
 	  .back {
 		  background-color: #2f2f2f;
 		  
 	  }
-	  
-	</style>  
+	  .podbar {
+	  		width:100%;
+	  		display:block;
+		    bottom:0;
+		    left:0;
+		    position:fixed;
+		    z-index:150;
+		    _position:absolute;
+		    _top:expression(eval(document.documentElement.scrollTop+
+		        (document.documentElement.clientHeight-this.offsetHeight)));
+		    height:100px;
+		}
+		#threads {
+			margin:0;
+			width:100%;
+			max-width:100%!important;
+			margin-bottom: 100px;
+		}
+		.thread {
+			padding:15px;
+			padding-left: 20%;
+			padding-right: 20%;
+		}
+		.thread:nth-child(odd) {
+			background: #696868;
+		} 
+		#messages {
+			margin-bottom: 100px;
+		}
+		.message:nth-child(odd) {
+			background: #696868;
+		}
+
+		.zabor-back {
+			    background-image: url(/static/static/img/background.png);
+			    background-repeat: no-repeat;
+			    background-position: 0px 95px;
+			    background-size: cover;
+			    /* height: 100%; */
+			    width: 100%;
+			    /* position: fixed; */
+			    bottom: 0;
+			    margin: auto;
+		}
+</style>  
+
+  </body>
+  
 </html>
 

@@ -1,58 +1,139 @@
 <template>
-	<div id="app">
-		<div v-if="error">
-			ERROR
-		</div>
-		<div v-else>
-			<div v-if="!location">
-				Please enable location
-			</div>
-			<div v-else>
-				<div v-if="!user">
-					Not logged in
-					<textarea v-model="pwd" placeholder="Password"></textarea>
-					<button v-on:click.prevent="register">Логин</button>	
+<div id="app">
+   <div class="container-fluid back">
+      <div class="navbar">
+         <div class="col">
+            <button type="button" class="btn btn-default back" aria-label="Left Align">
+            <img src="/static/static/img/change.png" width="20" />
+            </button>
+         </div>
+         <div class="col">
+            <div id="logo"><img class="img-responsive center-block" src="/static/static/img/logo.png"></div>
+         </div>
+         <div class="col">
+            <button type="button" class="btn btn-default float-right" aria-label="Left Align">
+            <img src="/static/static/img/filter.png" width="20" />	
+            </button>
+         </div>
+      </div>
+   </div>
+   <div class="container-fluid back" v-if="error">
+      Ну а что ты хотел, это хакатон?
+   </div>
+   <div class="container-fluid back" v-else>
+      <div v-if="!location">
+         Please enable location
+      </div>
+      <div v-else>
+         <div class="container zabor-back" v-if="!user" >
+            <div style='width:100%;height:300px;'></div>
+            <div class='row'>
+               <div class="col">
+               </div>
+               <div class="col" style='text-align:center;'>
+                  <input style="margin:auto;" type="text" class="input-group-text" v-model="pwd" placeholder="Password"></input>
+               </div>
+               <div class="col">
+               </div>
+            </div>
+            <div style='width:100%;height:50px;'>
+            </div>
+            <div class="row" v-if="auth_error">
+               <span style="margin:auto;text-align:center;color:red">{{auth_error}}</span>
+            </div>
+            <div style='width:100%;height:50px;'>
+            </div>
+            <div class='row' style="margin-bottom:50px;">
+               <div class="col">
+               </div>
+               <div class="col" style='text-align:center;'>
+                  <button class="btn btn-block" style="font-size: 26px;" v-on:click.prevent="register">Connect</button>
+               </div>
+               <div class="col">
+               </div>
+            </div>
+            <div style='width:100%;height:50px;'>
+            </div>
+         </div>
+         <div v-if="user">
+            <div class="podbar back">
+               <div v-if="!current_thread">
+                  <div class="row">
+                     <div class="col">
+                     </div>
+                     <div class="col-8" style="text-align:center">
+                        <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="thread_name" placeholder="Расскажи, что здесь происходит"></input>
+                        <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="postThread">Отправить</button>	
+                     </div>
+                     <div class="col">
+                     </div>
+                  </div>
+               </div>
+               <div v-if="current_thread">
+               	<div class="row">
+                  <div class="col">
+                  </div>
+                  <div class="col-8" style="text-align:center">
+                     <input type="text" style="width:50%;float:left;margin-top:4px;" class="input-group-text" v-model="message_text" placeholder="Сообщение"></input>
+                     <button  class="btn btn-lg" style="width:40%;float:right;" v-on:click.prevent="sendMessage">Отправить</button>	
+                  </div>
+                  <div class="col">
+                  </div>
+              	</div>
+               </div>
+            </div>
+         <div v-if="!current_thread">
+            <div id="threads" class="container" >
+               <div class="thread row" v-for="thread in threads">
+                  <div class="thread_title row" style="width:100%;">
+                     <div class='col-8'>
+                        <div>
+                           <a href='#' v-on:click.prevent="selectThread(thread)">
+                              <h4>{{thread.name}}</h4>
+                           </a>
+                           <small>{{thread.created_at}}</small>
+                        </div>
+                     </div>
+                     <div class='col' style="text-align:right;">
+                        <div><a href="#" v-on:click.prevent="like(thread)">Like {{thread.likes}}</a></div>
+                        <div><a href="#" v-on:click.prevent="dislike(thread)">Dislike {{thread.dislikes}}</a></div>
+                     </div>
+                  </div>
+                  <div>{{thread.messages_amount}} messages</div>
+               </div>
+            </div>
+         </div>
+         <div v-if="current_thread">
+            <div class="row" style="height:50px;background:rgba(255,255,255,0.2);">
+               <div class='row' style='height:7px;width:100%;'></div>
+               <div class='row' style='width:100%;'>
+                  <div class='col-2' style='padding:0px;padding-left:30px;'>
+                  	<button href="#" class="btn-sm" v-on:click.prevent="clearCurrentThread()">back</button>
+                  </div>
+                  <div class='col' style='text-align:center'>{{current_thread.name}}</div>
+               </div>
+            </div>
+            <div id="messages">
+               <div class="message" v-for="message in current_thread.messages">
+                  <div class="message_title row" style="width:100%;margin:0;padding:15px;">
+                     <div style='width:100%;'>
+                        <div>{{message.user}}</div>
+                        <small>{{message.created_at}}</small>
+                     </div>
+                     <div>
+                        {{message.text}}
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
 
-					<div v-if="auth_error">
-						{{auth_error}}
-					</div>
-				</div>
-				<div v-if="user">
-					<p>user: {{ user }}</p>
-					<textarea v-model="thread_name" placeholder="Расскажите, что здесь происходит"></textarea>
-					<button v-on:click.prevent="postThread">Запостить тред</button>	
-					<button v-on:click.prevent="getThreads">Получить треды</button>		
-					<p>Позиция {{location}} </p>
-					<p> {{thread_name}} </p>
-					<p> {{threads}} </p>
+    
 
-					<div v-if="!current_thread">
-						<div id="threads">
-						  <div class="thread" v-for="thread in threads">
-						  	<a href='#' v-on:click.prevent="selectThread(thread)"><h4>{{thread.name}}</h4></a>
-						  	<div><a href="#" v-on:click.prevent="like(thread)">Like {{thread.likes}}</a>, <a href="#" v-on:click.prevent="dislike(thread)">Dislike {{thread.dislikes}}</a></div>
-						  	<div>Messages {{thread.messages_amount}}</div>
-						  	<div>{{thread.created_at}}</div>
-						  </div>
-						</div>
-					</div>
-					<div v-if="current_thread">
-						<div id="messages">
-							<div class="message" v-for="message in current_thread.messages">
-							  	<div>{{message.user}}  {{message.created_at}}</div>
-							  	<p>{{message.text}}</p>
-						    </div>
-						</div>
-
-						<div id="message_form">
-							<input type="text" v-model="message_text" placeholder="Писать херню"></input>
-							<button v-on:click.prevent="sendMessage">Пост</button>	
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
 </template>
 
 
@@ -138,6 +219,10 @@ export default {
 				})
 				.catch(this.handleError)
     		}
+    	},
+    	clearCurrentThread: function(){
+    		this.current_thread = null;
+    		return this.getThreads();
     	},
     	getThreadMessages: function(thread){
     		this.$http.get(`http://${this.host}/thread/${thread.id}?location=${this.location}`)
